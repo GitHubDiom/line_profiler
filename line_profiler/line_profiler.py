@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from fileinput import filename
 import pickle
 import functools
 import inspect
@@ -7,6 +8,7 @@ import tempfile
 import os
 import sys
 from argparse import ArgumentError, ArgumentParser
+from time import time
 
 try:
     from ._line_profiler import LineProfiler as CLineProfiler
@@ -126,6 +128,30 @@ class LineProfiler(CLineProfiler):
         """
         lstats = self.get_stats()
         show_text(lstats.timings, lstats.unit, output_unit=output_unit, stream=stream, stripzeros=stripzeros)
+
+    def get_top_K_time_consuming_line(self, K=2):
+        """ Show the most time-consuming line
+        """
+        lstats = self.get_stats()
+        timings = lstats.timings
+        target_lines = []
+        filename = ""
+        for (fn, _, _), time_info in sorted(timings.items()):
+            if filename == "":
+                filename = fn
+                if os.path.exists(filename) or is_ipython_kernel_cell(filename):
+                    if os.path.exists(filename):
+                        # Clear the cache to ensure that we get up-to-date results.
+                        linecache.clearcache()
+                    all_lines = linecache.getlines(filename)
+        sorted_time_info = []
+        for time_info in timings.values():
+            sorted_time_info = sorted(time_info, key=lambda x: (x[2]), reverse=True)
+
+        for i in range(K):
+            lineno = sorted_time_info[i][0]-1
+            target_lines.append(all_lines[lineno])
+        return target_lines
 
     def run(self, cmd):
         """ Profile a single executable statment in the main namespace.
