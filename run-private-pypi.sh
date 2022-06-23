@@ -1,0 +1,1 @@
+pypi-server run -p 8822 ~/resources/py-private-packages 
