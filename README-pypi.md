@@ -1,5 +1,5 @@
 ### 安装
-按照 [https://segmentfault.com/a/1190000023759016](这里) 安装本地的pypi-server环境
+按照 [这里](https://segmentfault.com/a/1190000023759016) 安装本地的pypi-server环境
 
 ~/.pypirc 中的 local 地址就是 `upload-package-to-private-pypi` 脚本中上传包的地址
 
