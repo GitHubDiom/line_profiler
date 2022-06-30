@@ -5,7 +5,7 @@
 
 1. pip 安装所需要的包
 
-```pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pypi==1.5.0 ```
+```pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pypiserver passlib  scikit-build==0.15.0```
 
 2. 利用本地8822端口作为pypi-server端口
 ```./run-private-pypi.sh```
