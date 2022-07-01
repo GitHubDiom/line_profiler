@@ -1,0 +1,5 @@
+pypiserver 
+passlib
+scikit-build==0.15.0
+twine
+Ninja
