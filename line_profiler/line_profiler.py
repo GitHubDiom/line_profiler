@@ -127,8 +127,9 @@ class LineProfiler(CLineProfiler):
         """ Show the gathered statistics.
         """
         lstats = self.get_stats()
-        show_text(lstats.timings, lstats.unit, output_unit=output_unit, stream=stream, stripzeros=stripzeros)
-    
+        show_text(lstats.timings, lstats.unit, output_unit=output_unit,
+                  stream=stream, stripzeros=stripzeros)
+
     def get_all_lines(self):
         lstats = self.get_stats()
         stats = lstats.timings
@@ -140,19 +141,19 @@ class LineProfiler(CLineProfiler):
                     if os.path.exists(filename):
                         # Clear the cache to ensure that we get up-to-date results.
                         linecache.clearcache()
-                    all_lines = linecache.getlines(filename) 
+                    all_lines = linecache.getlines(filename)
         return all_lines
-    
+
     def get_sorted_time_info(self):
         lstats = self.get_stats()
         stats = lstats.timings
 
         sorted_time_info = []
         for timings in stats.values():
-            sorted_time_info = sorted(timings, key=lambda x: (x[2]), reverse=True)
+            sorted_time_info = sorted(
+                timings, key=lambda x: (x[2]), reverse=True)
         return sorted_time_info
-    
-    
+
     def get_subline_time(self, subline):
         all_lines = self.get_all_lines()
         sorted_time_info = self.get_sorted_time_info()
@@ -162,13 +163,13 @@ class LineProfiler(CLineProfiler):
             lineno = lineno-1
             if subline in all_lines[lineno]:
                 return time
-    
+
     def get_top_K_lines_info(self, K=2):
         """ Show the most time-consuming line
         """
         top_k_lines_info = {}
         all_lines = self.get_all_lines()
-        
+
         sorted_time_info = self.get_sorted_time_info()
 
         for i in range(K):
@@ -269,11 +270,13 @@ def show_func(filename, start_lineno, func_name, timings, unit,
     else:
         stream.write('\n')
         stream.write(f'Could not find file {filename}\n')
-        stream.write('Are you sure you are running this program from the same directory\n')
+        stream.write(
+            'Are you sure you are running this program from the same directory\n')
         stream.write('that you ran the profiler from?\n')
         stream.write("Continuing without the function's contents.\n")
         # Fake empty lines so we can see the timings, if not the code.
-        nlines = 1 if not linenos else max(linenos) - min(min(linenos), start_lineno) + 1
+        nlines = 1 if not linenos else max(
+            linenos) - min(min(linenos), start_lineno) + 1
         sublines = [''] * nlines
     for lineno, nhits, time in timings:
         if total_time == 0:  # Happens rarely on empty function
@@ -318,6 +321,7 @@ def show_text(stats, unit, output_unit=None, stream=None, stripzeros=False):
                   output_unit=output_unit, stream=stream,
                   stripzeros=stripzeros)
 
+
 def load_stats(filename):
     """ Utility function to load a pickled LineStats object from a given
     filename.
@@ -334,7 +338,8 @@ def main():
         return val
 
     parser = ArgumentParser()
-    parser.add_argument('-V', '--version', action='version', version=__version__)
+    parser.add_argument('-V', '--version',
+                        action='version', version=__version__)
     parser.add_argument(
         '-u',
         '--unit',
@@ -348,11 +353,13 @@ def main():
         action='store_true',
         help='Hide functions which have not been called',
     )
-    parser.add_argument('profile_output', help='*.lprof file created by kernprof')
+    parser.add_argument(
+        'profile_output', help='*.lprof file created by kernprof')
 
     args = parser.parse_args()
     lstats = load_stats(args.profile_output)
-    show_text(lstats.timings, lstats.unit, output_unit=args.unit, stripzeros=args.skip_zero)
+    show_text(lstats.timings, lstats.unit,
+              output_unit=args.unit, stripzeros=args.skip_zero)
 
 
 if __name__ == '__main__':
